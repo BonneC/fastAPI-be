@@ -3,7 +3,7 @@ from crud import engine, Session
 from models import Base, ImgInfo
 
 app = FastAPI()
-Base.metadata.create_all(engine)
+#Base.metadata.create_all(engine)
 s = Session()
 
 
