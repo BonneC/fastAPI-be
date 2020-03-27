@@ -3,30 +3,27 @@ from crud import engine, Session
 from models import Base, ImgInfo
 
 app = FastAPI()
-#Base.metadata.create_all(engine)
+# Base.metadata.create_all(engine)
 s = Session()
 
 
 @app.get("/")
 def read_root():
-    img = s.query(ImgInfo).first()
+    imgs = s.query(ImgInfo).all()
     s.close()
-    return {"Hello": img}
+    return imgs
 
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: str = None):
-    return {"item_id": item_id, "q": q}
+@app.get("/gallery/{id}")
+def results(id):
+    res = s.query(ImgInfo).get(id)
+    return res
 
-@app.get("/gallery/graphs")
-def results():
-    #    results = some_library()
-    return 1
 
-@app.get("/gallery/drawings")
-def results():
-    #    results = some_library()
-    return 1
+@app.get("/gallery/category/{cat}")
+def results(cat: str):
+    res = s.query(ImgInfo).filter_by(category=cat).all()
+    return res
 
 # @app.post("/my_stash")
 # async def create_item(item: Item):
