@@ -12,6 +12,12 @@ class ImgInfo(Base):
     category = Column(String)
     created = Column(Date)
 
+    def __init__(self, title, location, category, created):
+        self.title = title
+        self.location = location
+        self.category = category
+        self.created = created
+
     def __repr__(self):
         return "<Image(title='{}', location='{}', category={}, created={})>" \
             .format(self.title, self.location, self.category, self.created)

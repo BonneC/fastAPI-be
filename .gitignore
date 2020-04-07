@@ -3,6 +3,7 @@
 
 #database config file
 config.py
+images
 
 
 ### Flask ###
