@@ -7,6 +7,7 @@ import datetime
 from datetime import datetime as dt
 import shutil
 from pathlib import Path
+from fastapi.responses import FileResponse
 
 router = APIRouter()
 s = Session()
@@ -27,9 +28,9 @@ async def results():
 
 @router.post("/gallery")
 async def create_upload_file(upload_file: UploadFile = File(...)):
-    imazh = 'images/' + dt.now().strftime("%d_%m_%Y_%H-%M-%S")+'.jpg'
+    imazh = 'images/' + dt.now().strftime("%d_%m_%Y_%H-%M-%S") + '.jpg'
     img = ImgInfo('actual_imazh', imazh, 'cat1', datetime.date.today())
-    #{'title': 'actual_imazh', 'location': imazh, 'category': 'cat1', 'created': datetime.date.today()}
+    # {'title': 'actual_imazh', 'location': imazh, 'category': 'cat1', 'created': datetime.date.today()}
     path = Path(imazh)
     try:
         with path.open("wb") as buffer:
@@ -47,7 +48,9 @@ async def create_upload_file(upload_file: UploadFile = File(...)):
 @router.get("/gallery/{id}")
 async def results(id):
     res = s.query(ImgInfo).get(id)
-    return res
+    img = open(res.location, 'r')
+    return FileResponse(res.location, media_type="image/jpg")
+    #return res
 
 
 @router.get("/gallery/category/{cat}")
