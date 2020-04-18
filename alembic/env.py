@@ -14,9 +14,11 @@ config = context.config
 fileConfig(config.config_file_name)
 
 import sys, os
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 import config as my_config
+
 config.set_main_option('sqlalchemy.url', my_config.DATABASE_URI)
 
 # add your model's MetaData object here
@@ -24,7 +26,9 @@ config.set_main_option('sqlalchemy.url', my_config.DATABASE_URI)
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 from models import Base
+
 target_metadata = Base.metadata
+
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

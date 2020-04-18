@@ -1,18 +1,15 @@
+import shutil
+from pathlib import Path
+import datetime
+
 from fastapi.encoders import jsonable_encoder
+from starlette.responses import FileResponse
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from contextlib import contextmanager
 
-from starlette.responses import FileResponse
-
 from config import DATABASE_URI
-from sqlalchemy.ext.declarative import declarative_base
-
-from models import Base, ImgInfo
-
-import shutil
-from pathlib import Path
-import datetime
+from models import ImgInfo
 
 engine = create_engine(DATABASE_URI)
 Session = sessionmaker(bind=engine)
@@ -31,6 +28,7 @@ def session_scope():
         session.close()
 
 
+# put image and image information from database into a json
 def append_image_to_data(imgs):
     json_imgs = jsonable_encoder(imgs)
     for img in json_imgs:
@@ -43,11 +41,8 @@ def append_image_to_data(imgs):
 def get_images():
     with session_scope() as s:
         imgs = s.query(ImgInfo).all()
-        # json_imgs = jsonable_encoder(imgs)
-        return append_image_to_data(imgs)
-        # for img in json_imgs:
-        #     img.update({'img': FileResponse(img['location'], media_type="image/jpg")})
-        # return json_imgs
+        json_imgs = jsonable_encoder(imgs)
+        return json_imgs
 
 
 # save image in db and file system
@@ -69,17 +64,22 @@ def save_image(name: str, category: str, path: str, file):
         return 201, {"status": "sukses"}
 
 
+# get img info from database
+def get_image_desc(id):
+    with session_scope() as s:
+        img = s.query(ImgInfo).get(id)
+        return jsonable_encoder(img)
+
+
 # get image with ID
 def get_image(id):
     with session_scope() as s:
         img = s.query(ImgInfo).get(id)
-        # print(json)
-        # json_img = jsonable_encoder(img)
-        # json_img.update({'img': FileResponse(json_img['location'], media_type="image/jpg")})
-        return append_image_to_data({img})
+        return FileResponse(img.location, media_type="image/jpg")
 
 
+# get all images from category
 def get_images_cat(category):
     with session_scope() as s:
         imgs = s.query(ImgInfo).filter_by(category=category).all()
-        return append_image_to_data(imgs)
+        return jsonable_encoder(imgs)
