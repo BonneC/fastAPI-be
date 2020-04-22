@@ -47,12 +47,12 @@ def get_images():
 
 # save image in db and file system
 def save_image(name: str, category: str, path: str, file):
-    path = Path(path)
+    p = Path(path)
     img = ImgInfo(name, path, category, datetime.date.today())
 
     with session_scope() as s:
         try:
-            with path.open("wb") as buffer:
+            with p.open("wb") as buffer:
                 shutil.copyfileobj(file, buffer)
 
             s.add(img)
@@ -62,6 +62,16 @@ def save_image(name: str, category: str, path: str, file):
             file.close()
 
         return 201, {"status": "sukses"}
+
+
+def update_image(id, name: str, category: str):
+    with session_scope() as s:
+        img = s.query(ImgInfo).get(id)
+        img.title = name
+        img.category = category
+        s.commit()
+
+    return 201, {"status": "sukses"}
 
 
 # get img info from database
