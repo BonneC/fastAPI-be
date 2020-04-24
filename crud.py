@@ -88,6 +88,14 @@ def get_image(id):
         return FileResponse(img.location, media_type="image/jpg")
 
 
+def delete_image(id):
+    with session_scope() as s:
+        img = s.query(ImgInfo).get(id)
+        s.delete(img)
+        s.commit()
+    return 201, {"status": "sukses"}
+
+
 # get all images from category
 def get_images_cat(category):
     with session_scope() as s:

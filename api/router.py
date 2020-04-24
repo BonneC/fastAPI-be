@@ -39,6 +39,11 @@ async def results(id):
     return img
 
 
+@router.delete("/gallery/{id}")
+async def results(id):
+    return crud.delete_image(id)
+
+
 # update image info
 @router.put("/gallery/{id}")
 async def results(id, name: str, category: str):
