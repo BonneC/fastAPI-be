@@ -1,6 +1,7 @@
 import shutil
 from pathlib import Path
 import datetime
+import os
 
 from fastapi.encoders import jsonable_encoder
 from starlette.responses import FileResponse
@@ -91,8 +92,14 @@ def get_image(id):
 def delete_image(id):
     with session_scope() as s:
         img = s.query(ImgInfo).get(id)
+        path = img.location
         s.delete(img)
         s.commit()
+        try:
+            os.remove(path)
+        except Exception as e:
+            print(e)
+            return 500, {"status": "oopsie"}
     return 201, {"status": "sukses"}
 
 
