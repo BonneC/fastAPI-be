@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
     container_name: "fastapi-be"
     ports:
-      - "80"
+      - "80:80"
     volumes:
       - images:/app/images
     depends_on:
@@ -14,9 +14,10 @@ services:
 
   vuejs-fe:
     image: bonnana/galleryproj_vuejs-fe
+#    image: test/new-test:v1
     container_name: "vuejs-fe"
     ports:
-      - "8000"
+      - "80"
 
   my-postgres:
     image: postgres:latest
@@ -25,16 +26,15 @@ services:
 #      - backend
     ports:
       - "5432:5432"
-    env_file:
-      - .env
-#    environment:
-#      - POSTGRES_PASSWORD=fuk
-#      - POSTGRES_DB=rpi_base
+#    env_file:
+#      - .env
+    environment:
+      - POSTGRES_PASSWORD=fuk
+      - POSTGRES_DB=rpi_base
     volumes:
       - db-data:/var/lib/postgresql/data
   loadbalancer:
     build: nginx-c
-#    image: nginx/custom-nginx
     tty: true
     links:
       - fastapi-be

@@ -8,7 +8,7 @@ from pathlib import Path  # python3 only
 # load_dotenv(dotenv_path=env_path)
 load_dotenv()
 
-DATABASE_URI = os.getenv('DATABASE_URI')
+# DATABASE_URI = os.getenv('DATABASE_URI')
 
 
-# DATABASE_URI = 'postgres+psycopg2://postgres:fuk@localhost:5432/rpi_base'
+DATABASE_URI = 'postgres+psycopg2://postgres:fuk@my-postgres:5432/rpi_base'
